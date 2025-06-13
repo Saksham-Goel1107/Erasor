@@ -70,8 +70,17 @@ export const updateWhiteboard=mutation({
             throw new Error("Only the creator can modify a shared file");
         }
         
-        const result = await ctx.db.patch(args._id, {whiteboard:args.whiteboard});
-        return result;
+        try {
+            // Parse the whiteboard data to validate it
+            JSON.parse(args.whiteboard);
+            
+            // Save the validated whiteboard data
+            const result = await ctx.db.patch(args._id, {whiteboard: args.whiteboard});
+            return result;
+        } catch (error) {
+            console.error("Error updating whiteboard:", error);
+            throw new Error("Failed to update whiteboard: Invalid data format");
+        }
     },
 })
 
