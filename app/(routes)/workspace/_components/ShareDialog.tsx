@@ -14,7 +14,7 @@ function ShareDialog({isOpen, setIsOpen, fileId, fileName}: {
   isOpen: boolean, 
   setIsOpen: (open: boolean) => void,
   fileId: string,
-  fileName: string
+  fileName?: string
 }) {
   // Convert the string fileId to Convex ID type
   const fileIdTyped = fileId as Id<"files">

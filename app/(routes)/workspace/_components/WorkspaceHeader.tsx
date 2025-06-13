@@ -1,6 +1,6 @@
 "use client"
 import { Button } from '@/components/ui/button'
-import { Link, Save } from 'lucide-react'
+import { Link, Save, FileText, SquarePen, Columns } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import ShareDialog from './ShareDialog'
@@ -11,9 +11,11 @@ interface WorkspaceHeaderProps {
   fileId?: string;
   fileName?: string;
   fileData?: any;
+  viewMode: "both" | "documentation" | "diagram";
+  setViewMode: (mode: "both" | "documentation" | "diagram") => void;
 }
 
-function WorkspaceHeader({onSave, fileId, fileName, fileData}: WorkspaceHeaderProps) {
+function WorkspaceHeader({onSave, fileId, fileName, fileData, viewMode, setViewMode}: WorkspaceHeaderProps) {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
   const { user, isLoading } = useKindeBrowserClient()
   const [isOwner, setIsOwner] = useState(false)
@@ -43,6 +45,34 @@ function WorkspaceHeader({onSave, fileId, fileName, fileData}: WorkspaceHeaderPr
         <h2>{fileName || "File Name"}</h2>
       </div>
       <div className='flex items-center gap-4'>
+        {/* View mode toggle buttons */}
+        <div className='flex items-center gap-2 mr-4 border rounded-md overflow-hidden'>
+          <Button
+            variant={viewMode === "documentation" ? "default" : "ghost"}
+            size="sm"
+            className='h-8 px-3 rounded-none'
+            onClick={() => setViewMode("documentation")}
+          >
+            <FileText size={16} className="mr-2" /> Doc
+          </Button>
+          <Button
+            variant={viewMode === "both" ? "default" : "ghost"}
+            size="sm"
+            className='h-8 px-3 rounded-none'
+            onClick={() => setViewMode("both")}
+          >
+            <Columns size={16} className="mr-2" /> Both
+          </Button>
+          <Button
+            variant={viewMode === "diagram" ? "default" : "ghost"}
+            size="sm"
+            className='h-8 px-3 rounded-none'
+            onClick={() => setViewMode("diagram")}
+          >
+            <SquarePen size={16} className="mr-2" /> Diagram
+          </Button>
+        </div>
+        
         {showButtons ? (
           <>
             <Button className='h-8 text-[12px]
@@ -69,7 +99,7 @@ function WorkspaceHeader({onSave, fileId, fileName, fileData}: WorkspaceHeaderPr
           isOpen={isShareDialogOpen} 
           setIsOpen={setIsShareDialogOpen}
           fileId={fileId}
-          fileName={fileName || "File"}
+          fileName={fileName}
         />}
       </div>
     </div>

@@ -7,8 +7,12 @@ import { api } from '@/convex/_generated/api';
 import { FILE } from '../../dashboard/_components/FileList';
 import Canvas from '../_components/Canvas';
 
+// View mode types: "both", "documentation", "diagram"
+type ViewMode = "both" | "documentation" | "diagram";
+
 function Workspace({params}:any) {
    const [triggerSave,setTriggerSave]=useState(false);
+   const [viewMode, setViewMode] = useState<ViewMode>("both");
    const convex=useConvex();
    const [fileData,setFileData]=useState<FILE|any>();
    useEffect(()=>{
@@ -27,26 +31,33 @@ function Workspace({params}:any) {
         fileId={params.fileId}
         fileName={fileData?.fileName}
         fileData={fileData}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
       />
 
-      {/* Workspace Layout  */}
-      <div className='grid grid-cols-1
-      md:grid-cols-2'>
-        {/* Document  */}
-          <div className=' h-screen'>
+      {/* Workspace Layout - Grid adapts based on viewMode */}
+      <div className={`grid ${
+        viewMode === "both" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+      }`}>
+        {/* Document - Only shown in "both" or "documentation" modes */}
+        {(viewMode === "both" || viewMode === "documentation") && (
+          <div className='h-screen'>
             <Editor onSaveTrigger={triggerSave}
             fileId={params.fileId}
             fileData={fileData}
             />
           </div>
-        {/* Whiteboard/canvas  */}
-        <div className=' h-screen border-l'>
+        )}
+        {/* Whiteboard/canvas - Only shown in "both" or "diagram" modes */}
+        {(viewMode === "both" || viewMode === "diagram") && (
+          <div className={`h-screen ${viewMode === "both" ? "border-l" : ""}`}>
             <Canvas
              onSaveTrigger={triggerSave}
              fileId={params.fileId}
              fileData={fileData}
             />
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

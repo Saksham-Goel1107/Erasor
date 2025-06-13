@@ -7,19 +7,22 @@ function HowItWorks() {
       number: '01',
       title: 'Create or Join a Workspace',
       description: 'Start by creating your workspace or join an existing one with your team members.',
-      image: '/step1.png' // You'll need to add these images to your public folder
+      image: '/step1.png',
+      icon: '🚀'
     },
     {
       number: '02',
       title: 'Create Documents & Diagrams',
       description: 'Use our powerful editor for documents and intuitive canvas for diagrams.',
-      image: '/step2.png'
+      image: '/step2.png',
+      icon: '✏️'
     },
     {
       number: '03',
       title: 'Collaborate in Real-time',
       description: 'Work simultaneously with your team, seeing changes as they happen.',
-      image: '/step3.png'
+      image: '/step3.png',
+      icon: '👥'
     }
   ];
 
@@ -43,21 +46,29 @@ function HowItWorks() {
               className={`flex flex-col ${
                 index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
               } gap-8 items-center`}
-            >
-              {/* Step number and content */}
+            >              {/* Step number and content */}
               <div className="md:w-1/2 space-y-4">
-                <div className="flex items-center">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 shadow-lg">
+                    <span className="text-xl">{step.icon}</span>
+                  </div>
                   <span className="text-4xl font-bold bg-gradient-to-r from-sky-400 to-blue-600 bg-clip-text text-transparent">
                     {step.number}
                   </span>
-                  <div className="h-0.5 w-12 bg-gradient-to-r from-sky-400 to-blue-600 ml-4"></div>
+                  <div className="h-0.5 w-12 bg-gradient-to-r from-sky-400 to-blue-600 ml-1"></div>
                 </div>
                 
                 <h3 className="text-2xl font-bold text-white">{step.title}</h3>
                 <p className="text-lg text-gray-300">{step.description}</p>
+                
+                <div className="pt-2">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-sky-500/20 text-sky-300">
+                    {index === 0 ? "Getting Started" : 
+                     index === 1 ? "Content Creation" : "Teamwork"}
+                  </span>
+                </div>
               </div>
-              
-              {/* Image */}
+                {/* Image */}
               <div className="md:w-1/2 relative">
                 <div className="aspect-video relative rounded-xl overflow-hidden border border-sky-500/20 shadow-lg bg-gray-900/60 backdrop-blur-md">
                   <div className="absolute inset-0 bg-gradient-to-r from-sky-400/10 to-blue-600/10 rounded-xl"></div>
@@ -66,8 +77,17 @@ function HowItWorks() {
                     alt={step.title}
                     width={600}
                     height={400}
-                    className="w-full h-auto"
-                    onError={(e) => e.currentTarget.src = `https://placehold.co/600x400/1a1a1a/ffffff?text=Step+${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Set a better fallback image with proper step visualization
+                      const fallbackImages = [
+                        "https://placehold.co/600x400/0f172a/38bdf8?text=Create+or+Join+Workspace",
+                        "https://placehold.co/600x400/0f172a/38bdf8?text=Create+Documents+%26+Diagrams",
+                        "https://placehold.co/600x400/0f172a/38bdf8?text=Collaborate+in+Real-time"
+                      ];
+                      e.currentTarget.src = fallbackImages[index] || `https://placehold.co/600x400/0f172a/38bdf8?text=Step+${index + 1}`;
+                    }}
+                    priority={true}
                   />
                 </div>
                 
